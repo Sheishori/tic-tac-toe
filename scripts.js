@@ -38,8 +38,5 @@ const game = (() => {
 			})
 		});
 	}
-
-
-	return {gameBoard};
 })();
 
