@@ -1,15 +1,13 @@
-const gameBoard = {
-	gameboard : []
-};
+const game = (() => {
+	let	gameBoard = [];
+	
+	const player = (name) => {
+		 return {name};
+	};
+	
+	const displayController = {
 
-const player = (name) => {
-	 return {name};
-};
+	};
 
-const game = {
-
-};
-
-const displayController = {
-
-};
+	return {gameBoard};
+})();
