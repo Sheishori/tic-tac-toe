@@ -25,14 +25,16 @@ const game = (() => {
 		let fields = document.querySelectorAll(".square");
 		fields.forEach(element => {
 			element.addEventListener("click", () => {
-				if (counter === 0) {
-					gameBoard[element.classList[1]] = "X";
-					counter = 1;
-				} else {
-					gameBoard[element.classList[1]] = "O";
-					counter = 0;
+				if (gameBoard[element.classList[1]] === undefined) {
+					if (counter === 0) {
+						gameBoard[element.classList[1]] = "X";
+						counter = 1;
+					} else {
+						gameBoard[element.classList[1]] = "O";
+						counter = 0;
+					}
+					displayController();
 				}
-				displayController();
 			})
 		});
 	}
