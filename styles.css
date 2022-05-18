@@ -1,0 +1,11 @@
+#game {
+	display: grid;
+	grid-template-columns: 101px 101px 101px;
+	grid-template-rows: 101px 101px 101px;
+}
+
+.square {
+	width: 100px;
+	height: 100px;
+	border: 1px solid black;
+}
