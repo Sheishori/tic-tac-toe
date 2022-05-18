@@ -1,11 +1,32 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 #game {
 	display: grid;
-	grid-template-columns: 101px 101px 101px;
-	grid-template-rows: 101px 101px 101px;
+	grid-template-columns: 99px 99px 100px;
+	grid-template-rows: 99px 99px 100px;
+	border: 1px solid black;
 }
 
 .square {
 	width: 100px;
 	height: 100px;
-	border: 1px solid black;
+	border: 1px solid gray;
+}
+
+footer {
+	margin-top: auto;
+	margin-bottom: 1rem;
 }
