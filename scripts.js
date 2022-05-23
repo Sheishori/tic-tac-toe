@@ -59,7 +59,7 @@ const ticTacToe = (() => {
 
 		function _endGame(result) {
 			alert(result);
-
+			displayController.lock();
 		};
 
 		return {getCurrentPlayer, checkResult};
@@ -96,7 +96,14 @@ const ticTacToe = (() => {
 			boardDisplay.textContent = "";
 		};
 
-		return {render};
+		function lock() {
+			let fields = boardDisplay.querySelectorAll(".square");
+			fields.forEach(element => {
+				element.removeEventListener("click", game.getCurrentPlayer().playerMove, false);
+			});
+		}
+
+		return {render, lock};
 	})();
 
 
