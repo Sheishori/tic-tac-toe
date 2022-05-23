@@ -35,7 +35,15 @@ const ticTacToe = (() => {
 
 	const game = (() => {
 		let playerTurn = 1;
-		
+		let player1;
+		let player2;
+
+		function startGame() {
+			player1 = player(document.querySelector('#player1').value, "X");
+			player2 = player(document.querySelector('#player2').value, "O");
+			displayController.render();
+		};
+
 		function getCurrentPlayer() {
 			return (playerTurn === 1) ? player1 : player2;
 		};
@@ -51,9 +59,9 @@ const ticTacToe = (() => {
 			winConditions[5] = (board[2] !== undefined && board[2] === board[5] && board[2] === board[8]) ? board[2] : undefined;
 			winConditions[6] = (board[0] !== undefined && board[0] === board[4] && board[0] === board[8]) ? board[0] : undefined;
 			winConditions[7] = (board[2] !== undefined && board[2] === board[4] && board[2] === board[6]) ? board[2] : undefined;
-			if (winConditions.includes("X")) _endGame("X won!");
-			else if (winConditions.includes("O")) _endGame("O won!");
-			else if (!board.includes(undefined)) _endGame("It's a draw!");
+			if (winConditions.includes("X")) _endGame(player1.name);
+			else if (winConditions.includes("O")) _endGame(player2.name);
+			else if (!board.includes(undefined)) _endGame();
 			else _endTurn();
 		};
 
@@ -62,24 +70,39 @@ const ticTacToe = (() => {
 		};
 
 		function _endGame(result) {
-			alert(result);
+			if (result !== undefined) {
+				alert(result + " won!");
+			} else alert("It's a draw!");
 			displayController.lock();
 		};
 
 		function restartGame() {
 			gameBoard.clearBoard();
+			player1 = "";
+			player2 = "";
 			playerTurn = 1;
 			displayController.render();
+			displayController.start();
 		}
 
-		return {getCurrentPlayer, checkResult, restartGame};
+		return {startGame, getCurrentPlayer, checkResult, restartGame};
 	})();
 
 
 	const displayController = (() => {
 		const boardDisplay = document.querySelector("#game");
+		const startButton = document.querySelector('#start');
 		const restartButton = document.querySelector('#restart');
 		restartButton.addEventListener("click", game.restartGame);
+
+		function start() {
+			startButton.addEventListener("click", game.startGame);
+		};
+
+		(function _init() {
+			_createBoard();
+			start();
+		})();
 
 		function render() {
 			_clearBoard();
@@ -113,14 +136,10 @@ const ticTacToe = (() => {
 			fields.forEach(element => {
 				element.removeEventListener("click", game.getCurrentPlayer().playerMove, false);
 			});
+			startButton.removeEventListener("click", game.startGame);
 		}
 
-		return {render, lock};
+		return {start, render, lock};
 	})();
-
-
-	const player1 = player("first", "X");
-	const player2 = player("second", "O");
-	displayController.render();
 })();
 
