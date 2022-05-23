@@ -4,15 +4,15 @@ const ticTacToe = (() => {
 		
 		function getBoard() {
 			return board;
-		}
+		};
 
 		function updateBoard(newBoard) {
 			board = newBoard;
-		}
+		};
 
 		function clearBoard(){
 			board = [];
-		}
+		};
 
 		return {getBoard, updateBoard, clearBoard};
 	})();
@@ -26,7 +26,7 @@ const ticTacToe = (() => {
 				gameBoard.updateBoard(board);
 				displayController.render();
 				game.checkResult();
-			}
+			};
 		};
 
 		return {name, marker, playerMove};
@@ -70,10 +70,7 @@ const ticTacToe = (() => {
 		};
 
 		function _endGame(result) {
-			if (result !== undefined) {
-				alert(result + " won!");
-			} else alert("It's a draw!");
-			displayController.lock();
+			displayController.announceResult(result);
 		};
 
 		function restartGame() {
@@ -81,9 +78,10 @@ const ticTacToe = (() => {
 			player1 = "";
 			player2 = "";
 			playerTurn = 1;
+			displayController.clearResult();
 			displayController.render();
 			displayController.start();
-		}
+		};
 
 		return {startGame, getCurrentPlayer, checkResult, restartGame};
 	})();
@@ -92,6 +90,7 @@ const ticTacToe = (() => {
 	const displayController = (() => {
 		const boardDisplay = document.querySelector("#game");
 		const startButton = document.querySelector('#start');
+		const resultDiv = document.querySelector('#result');
 		const restartButton = document.querySelector('#restart');
 		restartButton.addEventListener("click", game.restartGame);
 
@@ -131,15 +130,26 @@ const ticTacToe = (() => {
 			boardDisplay.textContent = "";
 		};
 
-		function lock() {
+		function _lock() {
 			let fields = boardDisplay.querySelectorAll(".square");
 			fields.forEach(element => {
 				element.removeEventListener("click", game.getCurrentPlayer().playerMove, false);
 			});
 			startButton.removeEventListener("click", game.startGame);
-		}
+		};
 
-		return {start, render, lock};
+		function announceResult(result) {
+			if (result !== undefined) {
+				resultDiv.textContent = `${result} won!`;
+			} else resultDiv.textContent = "It's a draw!";
+			_lock();
+		};
+
+		function clearResult() {
+			resultDiv.textContent = "";
+		};
+
+		return {start, render, announceResult, clearResult};
 	})();
 })();
 
