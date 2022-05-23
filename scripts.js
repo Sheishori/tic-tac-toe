@@ -26,7 +26,7 @@ const game = (() => {
 	}
 
 	function bindEvents() {
-		let fields = document.querySelectorAll(".square");
+		let fields = boardDisplay.querySelectorAll(".square");
 		fields.forEach(element => {
 			element.addEventListener("click", playerMove);
 		});
