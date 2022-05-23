@@ -22,7 +22,6 @@ const ticTacToe = (() => {
 				gameBoard.updateBoard(board);
 				displayController.render();
 				game.checkResult();
-				game.endTurn();
 			}
 		};
 
@@ -37,10 +36,6 @@ const ticTacToe = (() => {
 			return (playerTurn === 1) ? player1 : player2;
 		};
 
-		function endTurn() {
-			playerTurn = (playerTurn === 1) ? 2 : 1;
-		};
-
 		function checkResult() {
 			let winConditions = [];
 			let board = gameBoard.getBoard();
@@ -52,11 +47,22 @@ const ticTacToe = (() => {
 			winConditions[5] = (board[2] !== undefined && board[2] === board[5] && board[2] === board[8]) ? board[2] : undefined;
 			winConditions[6] = (board[0] !== undefined && board[0] === board[4] && board[0] === board[8]) ? board[0] : undefined;
 			winConditions[7] = (board[2] !== undefined && board[2] === board[4] && board[2] === board[6]) ? board[2] : undefined;
-			if (winConditions.find(condition => {
-				if (condition == "X" || condition == "O") alert(condition + " won!");
-			}));
+			if (winConditions.includes("X")) _endGame("X");
+			else if (winConditions.includes("O")) _endGame("O");
+			else if (!board.includes(undefined)) _endGame("Draw");
+			else _endTurn();
 		};
-		return {getCurrentPlayer, endTurn, checkResult};
+
+		function _endTurn() {
+			playerTurn = (playerTurn === 1) ? 2 : 1;
+		};
+
+		function _endGame(result) {
+			alert(result);
+
+		};
+
+		return {getCurrentPlayer, checkResult};
 	})();
 
 
