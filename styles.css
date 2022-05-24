@@ -38,6 +38,10 @@ main {
 	font-size: 5rem;
 }
 
+#players div {
+	margin: 1rem 0;
+}
+
 #result {
 	font-size: 2rem;
 }
