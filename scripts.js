@@ -85,7 +85,7 @@ const ticTacToe = (() => {
 		function _changeTurn() {
 			if (playerTurn === 1) {
 				playerTurn = 2;
-				if (bot === true) computerPlayer.makeMove();
+				if (bot === true) computerPlayer.easyBot();
 			}
 			else playerTurn = 1;
 		}
@@ -189,8 +189,7 @@ const ticTacToe = (() => {
 	})();
 
 	const computerPlayer = (() => {
-		function getAvailableMoves() {
-			let board = gameBoard.getBoard();
+		function getAvailableMoves(board) {
 			let avaliableMoves = [];
 			board.filter((square, i) => {
 				if (square == undefined) avaliableMoves.push(i);
@@ -198,17 +197,18 @@ const ticTacToe = (() => {
 			return avaliableMoves;
 		};
 
-		function makeMove() {
+		// easy bot
+		function easyBot() {
 			let board = gameBoard.getBoard();
-			let avaliableMoves = getAvailableMoves();
+			let avaliableMoves = getAvailableMoves(board);
 			let move = Math.floor(Math.random()*avaliableMoves.length);
 			board[avaliableMoves[move]] = "O";
 			gameBoard.updateBoard(board);
 			displayController.render();
 			game.endTurn();
-		}
+		};
 
-		return {makeMove};
+		return {easyBot};
 	})();
 })();
 
