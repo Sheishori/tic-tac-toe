@@ -25,7 +25,7 @@ const ticTacToe = (() => {
 				board[this.classList[1]] = game.getCurrentPlayer().marker;
 				gameBoard.updateBoard(board);
 				displayController.render();
-				game.checkResult();
+				game.endTurn();
 			};
 		};
 
@@ -61,30 +61,34 @@ const ticTacToe = (() => {
 			return (playerTurn === 1) ? player1 : player2;
 		};
 
-		function checkResult() {
-			let winConditions = [];
-			let board = gameBoard.getBoard();
-			winConditions[0] = (board[0] !== undefined && board[0] === board[1] && board[0] === board[2]) ? board[0] : undefined;
-			winConditions[1] = (board[3] !== undefined && board[3] === board[4] && board[3] === board[5]) ? board[3] : undefined;
-			winConditions[2] = (board[6] !== undefined && board[6] === board[7] && board[6] === board[8]) ? board[6] : undefined;
-			winConditions[3] = (board[0] !== undefined && board[0] === board[3] && board[0] === board[6]) ? board[0] : undefined;
-			winConditions[4] = (board[1] !== undefined && board[1] === board[4] && board[1] === board[7]) ? board[1] : undefined;
-			winConditions[5] = (board[2] !== undefined && board[2] === board[5] && board[2] === board[8]) ? board[2] : undefined;
-			winConditions[6] = (board[0] !== undefined && board[0] === board[4] && board[0] === board[8]) ? board[0] : undefined;
-			winConditions[7] = (board[2] !== undefined && board[2] === board[4] && board[2] === board[6]) ? board[2] : undefined;
-			if (winConditions.includes("X")) _endGame(player1.name);
-			else if (winConditions.includes("O")) _endGame(player2.name);
-			else if (!board.includes(undefined)) _endGame();
-			else _endTurn();
+		function checkResult(board, player) {
+			if ((board[0] === player && board[1] === player && board[2] === player) ||
+					(board[3] === player && board[4] === player && board[5] === player) ||
+					(board[6] === player && board[7] === player && board[8] === player) ||
+					(board[0] === player && board[3] === player && board[6] === player) ||
+					(board[1] === player && board[4] === player && board[7] === player) ||
+					(board[2] === player && board[5] === player && board[8] === player) ||
+					(board[0] === player && board[4] === player && board[8] === player) ||
+					(board[2] === player && board[4] === player && board[6] === player))
+					return true;
+			else return false;
 		};
 
-		function _endTurn() {
+		function endTurn() {
+			let board = gameBoard.getBoard();
+			let player = getCurrentPlayer().marker;
+			if (checkResult(board, player)) _endGame(getCurrentPlayer().name);
+			else if (!board.includes(undefined)) _endGame();
+			else _changeTurn();
+		};
+
+		function _changeTurn() {
 			if (playerTurn === 1) {
 				playerTurn = 2;
 				if (bot === true) computerPlayer.makeMove();
 			}
 			else playerTurn = 1;
-		};
+		}
 
 		function _endGame(result) {
 			displayController.announceResult(result);
@@ -100,7 +104,7 @@ const ticTacToe = (() => {
 			displayController.start();
 		};
 
-		return {enableBot, disableBot, startGame, getCurrentPlayer, checkResult, restartGame};
+		return {enableBot, disableBot, startGame, getCurrentPlayer, checkResult, endTurn, restartGame};
 	})();
 
 
@@ -201,7 +205,7 @@ const ticTacToe = (() => {
 			board[avaliableMoves[move]] = "O";
 			gameBoard.updateBoard(board);
 			displayController.render();
-			game.checkResult();
+			game.endTurn();
 		}
 
 		return {makeMove};
