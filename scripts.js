@@ -17,7 +17,7 @@ const ticTacToe = (() => {
 	const player = (name, marker) => {
 		function playerMove() {
 			let board = gameBoard.getBoard();
-			if (board[this.classList[1]] !== "X" || board[this.classList[1]] !== "O") {
+			if (board[this.classList[1]] !== "X" && board[this.classList[1]] !== "O") {
 				board[this.classList[1]] = game.getCurrentPlayer().marker;
 				displayController.render();
 				game.endTurn();
