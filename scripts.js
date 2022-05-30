@@ -1,6 +1,6 @@
 const ticTacToe = (() => {
 	const gameBoard = (() => {
-		let	board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+		let board = ["X", "O", 2, 3, "X", 5, "O", "X", "O"];
 		
 		function getBoard() {
 			return board;
@@ -49,6 +49,7 @@ const ticTacToe = (() => {
 
 		function startGame() {
 			_setPlayers();
+			gameBoard.clearBoard();
 			displayController.render();
 		};
 
@@ -105,6 +106,7 @@ const ticTacToe = (() => {
 			displayController.clearResult();
 			displayController.render();
 			displayController.start();
+			startGame();
 		};
 
 		return {enableBot, disableBot, startGame, getCurrentPlayer, checkResult, getAvailableMoves, endTurn, restartGame};
