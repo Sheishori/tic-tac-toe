@@ -6,15 +6,11 @@ const ticTacToe = (() => {
 			return board;
 		};
 
-		function updateBoard(newBoard) {
-			board = newBoard;
-		};
-
 		function clearBoard(){
 			board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 		};
 
-		return {getBoard, updateBoard, clearBoard};
+		return {getBoard, clearBoard};
 	})();
 
 
@@ -23,7 +19,6 @@ const ticTacToe = (() => {
 			let board = gameBoard.getBoard();
 			if (board[this.classList[1]] !== "X" || board[this.classList[1]] !== "O") {
 				board[this.classList[1]] = game.getCurrentPlayer().marker;
-				gameBoard.updateBoard(board);
 				displayController.render();
 				game.endTurn();
 			};
@@ -203,10 +198,9 @@ const ticTacToe = (() => {
 		// easy bot
 		function easyBot() {
 			let board = gameBoard.getBoard();
-			let avaliableMoves = getAvailableMoves(board);
+			let avaliableMoves = game.getAvailableMoves(board);
 			let move = Math.floor(Math.random()*avaliableMoves.length);
 			board[avaliableMoves[move]] = "O";
-			gameBoard.updateBoard(board);
 			displayController.render();
 			game.endTurn();
 		};
