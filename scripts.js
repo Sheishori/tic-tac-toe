@@ -1,6 +1,6 @@
 const ticTacToe = (() => {
 	const gameBoard = (() => {
-		let	board = Array(9).fill(undefined);
+		let	board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 		
 		function getBoard() {
 			return board;
@@ -11,7 +11,7 @@ const ticTacToe = (() => {
 		};
 
 		function clearBoard(){
-			board = Array(9).fill(undefined);
+			board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 		};
 
 		return {getBoard, updateBoard, clearBoard};
@@ -21,7 +21,7 @@ const ticTacToe = (() => {
 	const player = (name, marker) => {
 		function playerMove() {
 			let board = gameBoard.getBoard();
-			if (board[this.classList[1]] === undefined) {
+			if (board[this.classList[1]] !== "X" || board[this.classList[1]] !== "O") {
 				board[this.classList[1]] = game.getCurrentPlayer().marker;
 				gameBoard.updateBoard(board);
 				displayController.render();
@@ -74,11 +74,19 @@ const ticTacToe = (() => {
 			else return false;
 		};
 
+		function getAvailableMoves(board) {
+			let avaliableMoves = [];
+			board.filter((square, i) => {
+				if (square !== "X" && square !== "O") avaliableMoves.push(i);
+			});
+			return avaliableMoves;
+		};
+
 		function endTurn() {
 			let board = gameBoard.getBoard();
 			let player = getCurrentPlayer().marker;
 			if (checkResult(board, player)) _endGame(getCurrentPlayer().name);
-			else if (!board.includes(undefined)) _endGame();
+			else if (getAvailableMoves(board).length === 0) _endGame();
 			else _changeTurn();
 		};
 
@@ -104,7 +112,7 @@ const ticTacToe = (() => {
 			displayController.start();
 		};
 
-		return {enableBot, disableBot, startGame, getCurrentPlayer, checkResult, endTurn, restartGame};
+		return {enableBot, disableBot, startGame, getCurrentPlayer, checkResult, getAvailableMoves, endTurn, restartGame};
 	})();
 
 
@@ -150,7 +158,9 @@ const ticTacToe = (() => {
 				let square = document.createElement("div");
 				square.classList.add("square");
 				square.classList.add(i);
+				if (gameBoard.getBoard()[i] === "X" || gameBoard.getBoard()[i] === "O") {
 				square.textContent = gameBoard.getBoard()[i];
+				}
 				boardDisplay.append(square);
 			};
 		};
@@ -189,13 +199,6 @@ const ticTacToe = (() => {
 	})();
 
 	const computerPlayer = (() => {
-		function getAvailableMoves(board) {
-			let avaliableMoves = [];
-			board.filter((square, i) => {
-				if (square == undefined) avaliableMoves.push(i);
-			});
-			return avaliableMoves;
-		};
 
 		// easy bot
 		function easyBot() {
