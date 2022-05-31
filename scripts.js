@@ -89,7 +89,7 @@ const ticTacToe = (() => {
 		function _changeTurn() {
 			if (playerTurn === 1) {
 				playerTurn = 2;
-				if (bot === true) computerPlayer.easyBot();
+				if (bot === true) computerPlayer.impossibleBot();
 			}
 			else playerTurn = 1;
 		}
@@ -207,7 +207,64 @@ const ticTacToe = (() => {
 			game.endTurn();
 		};
 
-		return {easyBot};
+		//impossible bot
+		function impossibleBot() {
+			let board = gameBoard.getBoard();
+			//create a temporary board for simulation purposes
+			let simBoard = board.slice();
+			let humanPlayer = "X";
+			let AI = "O";
+			let nextMove = minimax(simBoard, AI);
+
+			function minimax(board, player) {
+				let avaliableMoves = game.getAvailableMoves(board);
+				let possibleMoves = [];
+				
+				if (game.checkResult(board, AI)) return {score: 10};
+				else if (game.checkResult(board, humanPlayer)) return {score: -10};
+				else if (avaliableMoves.length === 0) return {score: 0};
+
+				for (let i = 0; i < avaliableMoves.length; i++) {
+					let move = {};
+					move.index = board[avaliableMoves[i]];
+					board[avaliableMoves[i]] = player;
+
+					//return only score to not create nested objects
+					if (player === AI) {
+						move.score = minimax(board, humanPlayer).score;
+					} else {
+						move.score = minimax(board, AI).score;
+					};
+
+					//undo marker placement for the next loop iteration
+					board[avaliableMoves[i]] = move.index;
+					possibleMoves.push(move);
+				};
+				let bestMove;
+				//choose the best move according to the score
+				if (player === AI) {
+					let bestScore = -100;
+					possibleMoves.forEach(function(move, index) {
+						if (move.score > bestScore) {
+							bestScore = move.score;
+							bestMove = index;
+						}
+					});
+				} else {
+					let bestScore = 100;
+					possibleMoves.forEach(function(move, index) {
+						if (move.score < bestScore) {
+							bestScore = move.score;
+							bestMove = index;
+						}
+					});
+				};
+				return possibleMoves[bestMove];
+			};
+			board[nextMove.index] = "O";
+			displayController.render();
+			game.endTurn();
+		};
+		return {easyBot, impossibleBot};
 	})();
 })();
-
