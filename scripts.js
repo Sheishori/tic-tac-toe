@@ -94,8 +94,7 @@ const ticTacToe = (() => {
 		function _changeTurn() {
 			if (playerTurn === 1) {
 				playerTurn = 2;
-				if (bot === "easy") computerPlayer.easyBot();
-				if (bot === "impossible") computerPlayer.impossibleBot();
+				if (bot !== false) computerPlayer.makeMove(bot);
 			}
 			else playerTurn = 1;
 		}
@@ -221,18 +220,14 @@ const ticTacToe = (() => {
 	const computerPlayer = (() => {
 
 		// easy bot
-		function easyBot() {
-			let board = gameBoard.getBoard();
+		function _easyBot(board) {
 			let avaliableMoves = game.getAvailableMoves(board);
 			let move = Math.floor(Math.random()*avaliableMoves.length);
-			board[avaliableMoves[move]] = "O";
-			displayController.render();
-			game.endTurn();
+			return avaliableMoves[move];
 		};
 
 		//impossible bot
-		function impossibleBot() {
-			let board = gameBoard.getBoard();
+		function _impossibleBot(board) {
 			//create a temporary board for simulation purposes
 			let simBoard = board.slice();
 			let humanPlayer = "X";
@@ -284,10 +279,19 @@ const ticTacToe = (() => {
 				};
 				return possibleMoves[bestMove];
 			};
-			board[nextMove.index] = "O";
+			return nextMove.index;
+		};
+
+		function makeMove(difficulty) {
+			let currentBoard = gameBoard.getBoard();
+			let move;
+			if (difficulty === "easy") move = _easyBot(currentBoard);
+			if (difficulty === "impossible") move = _impossibleBot(currentBoard);
+			currentBoard[move] = "O";
 			displayController.render();
 			game.endTurn();
 		};
-		return {easyBot, impossibleBot};
+
+		return {makeMove};
 	})();
 })();
