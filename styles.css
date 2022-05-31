@@ -42,6 +42,10 @@ main {
 	margin: 1rem 0;
 }
 
+#restart {
+	display: none;
+}
+
 #result {
 	font-size: 2rem;
 }

@@ -34,23 +34,28 @@ const ticTacToe = (() => {
 		let player2;
 		let bot = false;
 
-		function enableBot() {
-			bot = true;
+		function enableEasyBot() {
+			bot = "easy";
 		};
 
+		function enableImpBot() {
+			bot = "impossible";
+		};
+		
 		function disableBot() {
 			bot = false;
 		};
 
 		function _setPlayers(){
 			player1 = player(document.querySelector('#player1').value, "X");
-			player2 = (bot === true) ? player("Computer", "O") : player(document.querySelector('#player2').value, "O");
+			player2 = (bot === false) ? player(document.querySelector('#player2').value, "O") : player("Computer", "O");
 		}
 
 		function startGame() {
 			_setPlayers();
 			gameBoard.clearBoard();
 			displayController.render();
+			displayController.displayRestart();
 		};
 
 		function getCurrentPlayer() {
@@ -89,7 +94,8 @@ const ticTacToe = (() => {
 		function _changeTurn() {
 			if (playerTurn === 1) {
 				playerTurn = 2;
-				if (bot === true) computerPlayer.impossibleBot();
+				if (bot === "easy") computerPlayer.easyBot();
+				if (bot === "impossible") computerPlayer.impossibleBot();
 			}
 			else playerTurn = 1;
 		}
@@ -105,43 +111,61 @@ const ticTacToe = (() => {
 			playerTurn = 1;
 			displayController.clearResult();
 			displayController.render();
-			displayController.start();
 			startGame();
 		};
 
-		return {enableBot, disableBot, startGame, getCurrentPlayer, checkResult, getAvailableMoves, endTurn, restartGame};
+		return {enableEasyBot, enableImpBot, disableBot, startGame, getCurrentPlayer, checkResult, getAvailableMoves, endTurn, restartGame};
 	})();
 
 
 	const displayController = (() => {
 		const boardDisplay = document.querySelector("#game");
-		const onePlayerButton = document.querySelector('#onep');
 		const twoPlayersButton = document.querySelector('#twop');
+		const easyBotButton = document.querySelector('#easy');
+		const impBotButton = document.querySelector('#imp');
 		const playerTwoInput = document.querySelector('.player2');
 		const startButton = document.querySelector('#start');
 		const resultDiv = document.querySelector('#result');
 		const restartButton = document.querySelector('#restart');
-		onePlayerButton.addEventListener("click", onePlayer);
-		twoPlayersButton.addEventListener("click", twoPlayers);
+		easyBotButton.addEventListener("click", _easy);
+		impBotButton.addEventListener("click", _impossible);
+		twoPlayersButton.addEventListener("click", _twoPlayers);
+		startButton.addEventListener("click", game.startGame);
 		restartButton.addEventListener("click", game.restartGame);
 
-		function onePlayer() {
+		function _onePlayer() {
 			playerTwoInput.style.display = "none";
-			game.enableBot();
+			_displayStart();
 		}
 
-		function twoPlayers() {
-			playerTwoInput.style.display = "inherit";
+		function _easy() {
+			_onePlayer();
+			game.enableEasyBot();
+		}
+
+		function _impossible() {
+			_onePlayer();
+			game.enableImpBot();
+		}
+
+		function _twoPlayers() {
+			playerTwoInput.style.display = "block";
 			game.disableBot();
+			_displayStart();
 		}
 
-		function start() {
-			startButton.addEventListener("click", game.startGame);
+		function _displayStart() {
+			startButton.style.display = "block";
+			restartButton.style.display = "none";
+		};
+
+		function displayRestart() {
+			startButton.style.display = "none";
+			restartButton.style.display = "block";
 		};
 
 		(function _init() {
 			_createBoard();
-			start();
 		})();
 
 		function render() {
@@ -178,7 +202,6 @@ const ticTacToe = (() => {
 			fields.forEach(element => {
 				element.removeEventListener("click", game.getCurrentPlayer().playerMove, false);
 			});
-			startButton.removeEventListener("click", game.startGame);
 		};
 
 		function announceResult(result) {
@@ -192,7 +215,7 @@ const ticTacToe = (() => {
 			resultDiv.textContent = "";
 		};
 
-		return {start, render, announceResult, clearResult};
+		return {displayRestart, render, announceResult, clearResult};
 	})();
 
 	const computerPlayer = (() => {
