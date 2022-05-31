@@ -11,7 +11,7 @@ Game features 3 modes:
 Easy bot chooses a random square from the pool of possible moves
 and places it's mark there.
 
-Impossible bot uses an AI created with the help of a minimax algorithm selecting
+Impossible bot uses an AI made with a minimax algorithm selecting
 the optimal spot to place it's mark based on all possible scenarios
 calculated in the moment a player makes their move.
 
