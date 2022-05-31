@@ -258,8 +258,12 @@ const ticTacToe = (() => {
 					board[avaliableMoves[i]] = move.index;
 					possibleMoves.push(move);
 				};
+				return bestMove(possibleMoves, player);
+			};
+
+			//choose the best move according to the score
+			function bestMove(possibleMoves, player) {
 				let bestMove;
-				//choose the best move according to the score
 				if (player === AI) {
 					let bestScore = -100;
 					possibleMoves.forEach(function(move, index) {
@@ -278,7 +282,8 @@ const ticTacToe = (() => {
 					});
 				};
 				return possibleMoves[bestMove];
-			};
+			}
+			
 			return nextMove.index;
 		};
 
